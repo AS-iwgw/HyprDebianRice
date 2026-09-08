@@ -32,3 +32,52 @@ elif version == "14":
 else:
     print(f"Unsupported Debian version: {version}")
     sys.exit(1)
+
+if version == "13":
+    sources = """Types: deb deb-src
+URIs: https://deb.debian.org/debian
+Suites: trixie-backports
+Components: main
+Enabled: yes
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+"""  
+    try:
+        subprocess.run(
+            ["sudo", "tee", "/etc/apt/sources.list.d/debian-backports.sources"],
+            input=sources,
+            text=True,
+            stdout=subprocess.DEVNULL,
+            check=True
+        )
+
+        subprocess.run(
+            ["sudo", "apt", "update"],
+            check=True
+        )
+
+        subprocess.run(
+            ["sudo", "apt", "install", "-t", "trixie-backports", "hyprland"],
+            check=True
+        )
+
+    except subprocess.CalledProcessError as e:
+        print(f"Fehler beim Ausführen eines Befehls: {e}")
+        sys.exit(1)
+
+elif version == "14":
+    try:
+        subprocess.run(
+            ["sudo", "apt", "update"],
+            check=True
+        )
+
+        subprocess.run(
+            ["sudo", "apt", "install", "hyprland"],
+            check=True
+        )
+
+    except subprocess.CalledProcessError as e:
+        print(f"Fehler beim Ausführen eines Befehls: {e}")
+        sys.exit(1)
+
+
