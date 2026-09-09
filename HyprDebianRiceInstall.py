@@ -27,13 +27,6 @@ version = os_release.get("VERSION_ID")
 
 if version == "13":
     print("Debian 13 detected")
-elif version == "14":
-    print("Debian 14 detected")
-else:
-    print(f"Unsupported Debian version: {version}")
-    sys.exit(1)
-
-if version == "13":
     sources = """Types: deb deb-src
 URIs: https://deb.debian.org/debian
 Suites: trixie-backports
@@ -64,20 +57,9 @@ Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
         print(f"Fehler beim Ausführen eines Befehls: {e}")
         sys.exit(1)
 
-elif version == "14":
-    try:
-        subprocess.run(
-            ["sudo", "apt", "update"],
-            check=True
-        )
+else:
+    print(f"Unsupported Debian version: {version}")
+    sys.exit(1)
 
-        subprocess.run(
-            ["sudo", "apt", "install", "hyprland"],
-            check=True
-        )
-
-    except subprocess.CalledProcessError as e:
-        print(f"Fehler beim Ausführen eines Befehls: {e}")
-        sys.exit(1)
 
 
