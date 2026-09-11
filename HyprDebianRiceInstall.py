@@ -9,6 +9,8 @@
 import subprocess
 import shutil
 import sys
+import os
+import getpass
 from pathlib import Path
 
 # 1. Debian check and adding backports
@@ -74,15 +76,6 @@ for line in Path("HyprDebianRicePackage.csv").read_text().splitlines():
         except subprocess.CalledProcessError as e:
             print(f"Error installing a backports package: {e}")
             sys.exit(1)
-    elif key == "stable":
-        try:
-            subprocess.run(
-                ["sudo", "apt", "install", "-y", value],
-                check=True
-            )
-        except subprocess.CalledProcessError as e:
-            print(f"Error installing a stable package: {e}")
-            sys.exit(1)
     else:
         try:
             subprocess.run(
@@ -92,3 +85,24 @@ for line in Path("HyprDebianRicePackage.csv").read_text().splitlines():
         except subprocess.CalledProcessError as e:
             print(f"Error installing an unknown package: {e}")
             sys.exit(1)
+
+# 3. Setting up config
+# Get current user, create .config-folder and import fancy settings
+# Specify the absolute path for the directory
+
+current_user = getpass.getuser()
+directory_name = Path("/home") / current_user / ".config"
+
+try:
+    os.mkdir(directory_name)
+    print(f"Directory '{directory_name}' created successfully.")
+except FileExistsError:
+    print(f"Directory '{directory_name}' already exists.")
+except PermissionError:
+    print(f"Permission denied: Unable to create '{directory_name}'.")
+except Exception as e:
+    print(f"An error occurred: {e}")
+
+
+
+
